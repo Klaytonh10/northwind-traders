@@ -8,10 +8,13 @@ public class Main {
 
     public static ArrayList<Product> products = null;
     public static ArrayList<Customer> customers = null;
+    public static ArrayList<Category> categories = null;
+
+    public static Scanner scanner;
 
     public static void main(String[] args) {
 
-        Scanner scanner = new Scanner(System.in);
+        scanner = new Scanner(System.in);
 
         boolean running = true;
         while(running){
@@ -22,7 +25,8 @@ public class Main {
                     
                     1) Display all products
                     2) Display all customers
-                    3) Exit
+                    3) Display all categories
+                    0) Exit
                     
                     """);
             String choice = scanner.nextLine();
@@ -34,6 +38,9 @@ public class Main {
                     handleCustomerQuery();
                     break;
                 case "3":
+                    handleDisplayCategories();
+                    break;
+                case "0":
                     running = false;
                     break;
                 default:
@@ -41,6 +48,25 @@ public class Main {
             }
         }
 
+    }
+
+    public static void handleDisplayCategories() {
+
+        scanner = new Scanner(System.in);
+
+        try {
+            categories = DB.categoryQuery();
+
+            for (Category category : categories) {
+                System.out.println("ID: " + category.getId() + "    Category Name: " + category.getName());
+            }
+
+            System.out.println("\nSelect a category id to display it's products");
+            String input = scanner.nextLine();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void handleCustomerQuery() {

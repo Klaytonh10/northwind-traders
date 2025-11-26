@@ -15,29 +15,26 @@ public class DB {
 
         ArrayList<Product> products = new ArrayList<>();
 
-        Connection connection = DriverManager.getConnection(url, user, password);
-        Statement statement = connection.createStatement();
-        String query = "SELECT * FROM products";
+        try (
+                Connection connection = DriverManager.getConnection(url, user, password);
+                PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM products");
+        ) {
+            try (
+                    ResultSet resultSet = preparedStatement.executeQuery()
+            ) {
+                while (resultSet.next()) {
+                    int id = resultSet.getInt("ProductID");
+                    String name = resultSet.getString("ProductName");
+                    double price = resultSet.getDouble("UnitPrice");
+                    int stock = resultSet.getInt("UnitsInStock");
 
-        ResultSet resultSet = statement.executeQuery(query);
-
-        try {
-            while (resultSet.next()) {
-                int id = resultSet.getInt("ProductID");
-                String name = resultSet.getString("ProductName");
-                double price = resultSet.getDouble("UnitPrice");
-                int stock = resultSet.getInt("UnitsInStock");
-
-                Product product = new Product(id, name, price, stock);
-                products.add(product);
+                    Product product = new Product(id, name, price, stock);
+                    products.add(product);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            if (resultSet != null) resultSet.close();
-            if (connection != null) connection.close();
         }
-
 
         return products;
     }
@@ -46,32 +43,56 @@ public class DB {
 
         ArrayList<Customer> customers = new ArrayList<>();
 
-        Connection connection = DriverManager.getConnection(url, user, password);
-        Statement statement = connection.createStatement();
-        String query = "SELECT * FROM customers ORDER BY country";
+        try (
+                Connection connection = DriverManager.getConnection(url, user, password);
+                PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM customers ORDER BY country");
+        ) {
+            try (
+                    ResultSet resultSet = preparedStatement.executeQuery()
+            ) {
+                while (resultSet.next()) {
+                    String id = resultSet.getString("CustomerID");
+                    String contactName = resultSet.getString("ContactName");
+                    String companyName = resultSet.getString("CompanyName");
+                    String city = resultSet.getString("City");
+                    String country = resultSet.getString("Country");
+                    String phoneNumber = resultSet.getString("Phone");
 
-        ResultSet resultSet = statement.executeQuery(query);
-
-        try {
-            while (resultSet.next()) {
-                String id = resultSet.getString("CustomerID");
-                String contactName = resultSet.getString("ContactName");
-                String companyName = resultSet.getString("CompanyName");
-                String city = resultSet.getString("City");
-                String country = resultSet.getString("Country");
-                String phoneNumber = resultSet.getString("Phone");
-
-                Customer customer = new Customer(id, contactName, companyName, city, country, phoneNumber);
-                customers.add(customer);
+                    Customer customer = new Customer(id, contactName, companyName, city, country, phoneNumber);
+                    customers.add(customer);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            if (resultSet != null) resultSet.close();
-            if (connection != null) connection.close();
         }
 
         return customers;
+    }
+
+    public static ArrayList<Category> categoryQuery() throws SQLException {
+
+        ArrayList<Category> categories = new ArrayList<>();
+
+        try (
+                Connection connection = DriverManager.getConnection(url, user, password);
+                PreparedStatement preparedStatement = connection.prepareStatement("SELECT CategoryID, CategoryName FROM customers ORDER BY categories");
+        ) {
+            try (
+                    ResultSet resultSet = preparedStatement.executeQuery()
+            ) {
+                while (resultSet.next()) {
+                    int id = resultSet.getInt("CategoryID");
+                    String contactName = resultSet.getString("CategoryName");
+
+                    Category category = new Category(id, contactName);
+                    categories.add(category);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return categories;
     }
 
 }
