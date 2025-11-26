@@ -1,30 +1,28 @@
 package com.pluralsight;
 
-import java.sql.ResultSet;
-import java.sql.Connection;
-import java.sql.DriverManager;
+import com.mysql.cj.jdbc.exceptions.SQLError;
+
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.ArrayList;
 
 public class Main {
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) {
 
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/northwind",
-                "root",
-                "yearup");
+        ArrayList<Product> products = null;
 
-        Statement statement = connection.createStatement();
-
-        String query = "SELECT * FROM products";
-
-        ResultSet resultSet = statement.executeQuery(query);
-
-        while(resultSet.next()) {
-            String outString = resultSet.getString("ProductName");
-            System.out.println(outString);
+        try{
+            products = DB.DBQuery();
+        }catch (SQLException e) {
+            System.out.println(e);
         }
 
-        connection.close();
+        for (Product product : products) {
+            System.out.println("ID: " + String.valueOf(product.getId()));
+            System.out.println("Name: " + product.getName());
+            System.out.println("Price: " + String.valueOf(product.getPrice()));
+            System.out.println("Stock: " + String.valueOf(product.getUnitsInStock()));
+            System.out.println("-----------");
+        }
     }
 }
