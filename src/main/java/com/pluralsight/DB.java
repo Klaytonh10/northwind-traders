@@ -48,7 +48,7 @@ public class DB {
 
         Connection connection = DriverManager.getConnection(url, user, password);
         Statement statement = connection.createStatement();
-        String query = "SELECT * FROM customers";
+        String query = "SELECT * FROM customers ORDER BY country";
 
         ResultSet resultSet = statement.executeQuery(query);
 
