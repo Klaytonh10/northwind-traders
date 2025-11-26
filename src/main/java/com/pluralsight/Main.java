@@ -11,18 +11,18 @@ public class Main {
 
         ArrayList<Product> products = null;
 
-        try{
+        try {
             products = DB.DBQuery();
-        }catch (SQLException e) {
-            System.out.println(e);
-        }
 
-        for (Product product : products) {
-            System.out.println("ID: " + String.valueOf(product.getId()));
-            System.out.println("Name: " + product.getName());
-            System.out.println("Price: " + String.valueOf(product.getPrice()));
-            System.out.println("Stock: " + String.valueOf(product.getUnitsInStock()));
-            System.out.println("-----------");
+            for (Product product : products) {
+                System.out.println("ID: " + String.valueOf(product.getId()));
+                System.out.println("Name: " + product.getName());
+                System.out.println("Price: " + String.valueOf(product.getPrice()));
+                System.out.println("Stock: " + String.valueOf(product.getUnitsInStock()));
+                System.out.println("-----------");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }

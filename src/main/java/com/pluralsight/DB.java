@@ -20,17 +20,23 @@ public class DB {
 
         ResultSet resultSet = statement.executeQuery(query);
 
-        while(resultSet.next()) {
-            int id = resultSet.getInt("ProductID");
-            String name = resultSet.getString("ProductName");
-            double price = resultSet.getDouble("UnitPrice");
-            int stock = resultSet.getInt("UnitsInStock");
+        try {
+            while (resultSet.next()) {
+                int id = resultSet.getInt("ProductID");
+                String name = resultSet.getString("ProductName");
+                double price = resultSet.getDouble("UnitPrice");
+                int stock = resultSet.getInt("UnitsInStock");
 
-            Product product = new Product(id, name, price, stock);
-            products.add(product);
+                Product product = new Product(id, name, price, stock);
+                products.add(product);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (resultSet != null) resultSet.close();
+            if (connection != null) connection.close();
         }
 
-        connection.close();
 
         return products;
     }
