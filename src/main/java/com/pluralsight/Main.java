@@ -12,6 +12,7 @@ public class Main {
     public static ArrayList<Category> categories = null;
 
     public static Scanner scanner = new Scanner(System.in);
+    public static String choice = "";
 
     public static void main(String[] args) {
 
@@ -28,7 +29,7 @@ public class Main {
                     0) Exit
                     
                     """);
-            String choice = scanner.nextLine();
+            choice = scanner.nextLine();
             switch (choice) {
                 case "1":
                     handleProductsQuery();
@@ -51,29 +52,41 @@ public class Main {
 
     public static void handleDisplayCategories() {
 
-        HashMap<Integer, String> selectableCategories = new HashMap<>();
+        HashMap<Integer, Category> selectableCategories = new HashMap<>();
 
         try {
             categories = DB.categoryQuery();
 
             for (Category category : categories) {
-                selectableCategories.put(category.getId(), category.getName());
-                System.out.println("ID: " + category.getId() + "    Category Name: " + category.getName());
+                selectableCategories.put(category.getId(), category);
+                System.out.println("ID) " + category.getId() + "    Category Name: " + category.getName());
             }
 
             System.out.println("\nSelect a category id to display it's products");
-            String input = scanner.nextLine();
-            Category selectedCategory = selectableCategories.get(input);
+            choice = scanner.nextLine();
+            Category selectedCategory = selectableCategories.get(Integer.parseInt(choice));
 
             boolean isTrue = true;
             while(isTrue){
                 if (selectableCategories.containsValue(selectedCategory)) {
-
+                    products = DB.productsQuery();
+                    for (Product product: products) {
+                        if(selectedCategory.getId() == product.getCategoryID()){
+                            System.out.println("ID: " + String.valueOf(product.getId()));
+                            System.out.println("Name: " + product.getName());
+                            System.out.println("Price: " + String.valueOf(product.getPrice()));
+                            System.out.println("Stock: " + String.valueOf(product.getUnitsInStock()));
+                            System.out.println("-----------\n\n");
+                        }
+                    }
+                    isTrue = !isTrue;
                 } else {
-                    isTrue = false;
+                    System.out.println("\nFailed to make selection\n");
+                    System.out.println("\nSelect a category id to display it's products");
+                    choice = scanner.nextLine();
+                    selectedCategory = selectableCategories.get(Integer.parseInt(choice));
                 }
             }
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

@@ -27,8 +27,9 @@ public class DB {
                     String name = resultSet.getString("ProductName");
                     double price = resultSet.getDouble("UnitPrice");
                     int stock = resultSet.getInt("UnitsInStock");
+                    int categoryID = resultSet.getInt("CategoryID");
 
-                    Product product = new Product(id, name, price, stock);
+                    Product product = new Product(id, name, price, stock, categoryID);
                     products.add(product);
                 }
             }
@@ -75,7 +76,7 @@ public class DB {
 
         try (
                 Connection connection = DriverManager.getConnection(url, user, password);
-                PreparedStatement preparedStatement = connection.prepareStatement("SELECT CategoryID, CategoryName FROM customers ORDER BY categories");
+                PreparedStatement preparedStatement = connection.prepareStatement("SELECT CategoryID, CategoryName FROM categories ORDER BY CategoryID");
         ) {
             try (
                     ResultSet resultSet = preparedStatement.executeQuery()
