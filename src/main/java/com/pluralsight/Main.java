@@ -2,6 +2,7 @@ package com.pluralsight;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Main {
@@ -10,11 +11,9 @@ public class Main {
     public static ArrayList<Customer> customers = null;
     public static ArrayList<Category> categories = null;
 
-    public static Scanner scanner;
+    public static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-
-        scanner = new Scanner(System.in);
 
         boolean running = true;
         while(running){
@@ -52,17 +51,28 @@ public class Main {
 
     public static void handleDisplayCategories() {
 
-        scanner = new Scanner(System.in);
+        HashMap<Integer, String> selectableCategories = new HashMap<>();
 
         try {
             categories = DB.categoryQuery();
 
             for (Category category : categories) {
+                selectableCategories.put(category.getId(), category.getName());
                 System.out.println("ID: " + category.getId() + "    Category Name: " + category.getName());
             }
 
             System.out.println("\nSelect a category id to display it's products");
             String input = scanner.nextLine();
+            Category selectedCategory = selectableCategories.get(input);
+
+            boolean isTrue = true;
+            while(isTrue){
+                if (selectableCategories.containsValue(selectedCategory)) {
+
+                } else {
+                    isTrue = false;
+                }
+            }
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
