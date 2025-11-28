@@ -1,5 +1,7 @@
 package com.pluralsight;
 
+import com.mysql.cj.jdbc.MysqlDataSource;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,7 +16,13 @@ public class Main {
     public static Scanner scanner = new Scanner(System.in);
     public static String choice = "";
 
+    private static MysqlDataSource dataSource = new MysqlDataSource();
+
     public static void main(String[] args) {
+
+        dataSource.setURL(args[0]);
+        dataSource.setUser(args[1]);
+        dataSource.setPassword(args[2]);
 
         boolean running = true;
         while(running){
@@ -55,7 +63,7 @@ public class Main {
         HashMap<Integer, Category> selectableCategories = new HashMap<>();
 
         try {
-            categories = DB.categoryQuery();
+            categories = DB.categoryQuery(dataSource);
 
             for (Category category : categories) {
                 selectableCategories.put(category.getId(), category);
@@ -69,7 +77,7 @@ public class Main {
             boolean isTrue = true;
             while(isTrue){
                 if (selectableCategories.containsValue(selectedCategory)) {
-                    products = DB.productsQuery();
+                    products = DB.productsQuery(dataSource);
                     for (Product product: products) {
                         if(selectedCategory.getId() == product.getCategoryID()){
                             System.out.println("ID: " + String.valueOf(product.getId()));
@@ -94,7 +102,7 @@ public class Main {
 
     public static void handleCustomerQuery() {
         try {
-            customers = DB.customerQuery();
+            customers = DB.customerQuery(dataSource);
 
             for (Customer customer : customers) {
                 System.out.println("ID: " + String.valueOf(customer.getId()));
@@ -112,7 +120,7 @@ public class Main {
 
     public static void handleProductsQuery() {
         try {
-            products = DB.productsQuery();
+            products = DB.productsQuery(dataSource);
 
             for (Product product : products) {
                 System.out.println("ID: " + String.valueOf(product.getId()));

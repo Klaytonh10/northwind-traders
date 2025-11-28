@@ -1,22 +1,18 @@
 package com.pluralsight;
 
+import com.mysql.cj.jdbc.MysqlDataSource;
+
 import java.sql.*;
 import java.util.ArrayList;
 
 public class DB {
 
-    private static String url = "jdbc:mysql://localhost:3306/northwind";
-    private static String user = "root";
-    private static String password = "yearup";
-
-    private static String query = "";
-
-    public static ArrayList<Product> productsQuery() throws SQLException {
+    public static ArrayList<Product> productsQuery(MysqlDataSource dataSource) throws SQLException {
 
         ArrayList<Product> products = new ArrayList<>();
 
         try (
-                Connection connection = DriverManager.getConnection(url, user, password);
+                Connection connection = dataSource.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM products");
         ) {
             try (
@@ -40,12 +36,12 @@ public class DB {
         return products;
     }
 
-    public static ArrayList<Customer> customerQuery() throws SQLException {
+    public static ArrayList<Customer> customerQuery(MysqlDataSource dataSource) throws SQLException {
 
         ArrayList<Customer> customers = new ArrayList<>();
 
         try (
-                Connection connection = DriverManager.getConnection(url, user, password);
+                Connection connection = dataSource.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM customers ORDER BY country");
         ) {
             try (
@@ -70,12 +66,12 @@ public class DB {
         return customers;
     }
 
-    public static ArrayList<Category> categoryQuery() throws SQLException {
+    public static ArrayList<Category> categoryQuery(MysqlDataSource dataSource) throws SQLException {
 
         ArrayList<Category> categories = new ArrayList<>();
 
         try (
-                Connection connection = DriverManager.getConnection(url, user, password);
+                Connection connection = dataSource.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT CategoryID, CategoryName FROM categories ORDER BY CategoryID");
         ) {
             try (
